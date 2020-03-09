@@ -105,7 +105,7 @@ public class gedi800 extends CordovaPlugin
 				   config.offset = 10;
 				   config.paint = paint;
 
-				   iPrntr.DrawStringExt(config, text);
+				   //iPrntr.DrawStringExt(config, text);
 				}
 			};
 			
