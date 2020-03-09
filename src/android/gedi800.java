@@ -49,8 +49,8 @@ import br.com.gertec.gedi.structs.GEDI_PRNTR_st_StringConfig;
  */
 public class gedi800 extends CordovaPlugin 
 {
-	IPRNTR iPrntr;
-    IGEDI  iGEDI;
+	IGEDI iGedi = null;	
+	IPRNTR iprntr;
 	
 	public boolean execute( String action, JSONArray args, CallbackContext callbackContext ) throws JSONException 
 	{
@@ -95,7 +95,7 @@ public class gedi800 extends CordovaPlugin
 				{
 				   GEDI.init( cordova.getActivity( ) );				   
 				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
-				   iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
+				   iprntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
 				   //tPRNTR.DrawString( cordova.getActivity( ).getApplicationContext( ), iPrntr, position, 0, blankLines, font, bold, italic, underline, size, text );
 				   Paint paint = new Paint();
 				   paint.setTextSize(size);
@@ -105,7 +105,7 @@ public class gedi800 extends CordovaPlugin
 				   config.offset = 10;
 				   config.paint = paint;
 
-				   iPrntr.DrawStringExt(config, text);
+				   iprntr.DrawStringExt(config, text);
 				}
 			};
 			
