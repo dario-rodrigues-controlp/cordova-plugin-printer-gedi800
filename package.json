@@ -1,0 +1,25 @@
+{
+  "name": "cordova-plugin-printer-gedi800",
+  "version": "0.0.1",
+  "description": "Cordova plugin to print documents using SDK GEDI G800.",
+  "cordova": {
+    "id": "cordova-plugin-printer-gedi800",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dario-rodrigues/cordova-plugin-printer-gedi800.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Dario Rodrigues",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/dario-rodrigues/cordova-plugin-printer-gedi800/issues"
+  },
+  "homepage": "https://github.com/dario-rodrigues/cordova-plugin-printer-gedi800#readme"
+}
