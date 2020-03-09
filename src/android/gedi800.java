@@ -95,7 +95,7 @@ public class gedi800 extends CordovaPlugin
 				{
 				   GEDI.init( cordova.getActivity( ) );				   
 				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
-				   IPRNTR iPrntr = iGedi.getPRNTR( );
+				   IPRNTR iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
 				   //tPRNTR.DrawString( cordova.getActivity( ).getApplicationContext( ), iPrntr, position, 0, blankLines, font, bold, italic, underline, size, text );
 				   Paint paint = new Paint();
 				   paint.setTextSize(size);
