@@ -93,8 +93,8 @@ public class gedi800 extends CordovaPlugin
 				@Override
 				public void run( ) 
 				{
-				   GEDI.init( cordova.getActivity( ).getApplicationContext( ) );				   
-				   iGedi = GEDI.getInstance( cordova.getActivity( ).getApplicationContext( ) );				   
+				   GEDI.init( cordova.getActivity( ) );				   
+				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
 				   IPRNTR iPrntr = iGedi.getPRNTR( );
 				   //tPRNTR.DrawString( cordova.getActivity( ).getApplicationContext( ), iPrntr, position, 0, blankLines, font, bold, italic, underline, size, text );
 				   Paint paint = new Paint();
@@ -142,11 +142,11 @@ public class gedi800 extends CordovaPlugin
 				@Override
 				public void run( ) 
 				{
-				   GEDI.init( cordova.getActivity( ).getApplicationContext( ) );				   
-				   iGedi = GEDI.getInstance( cordova.getActivity( ).getApplicationContext( ) );				   
+				   GEDI.init( cordova.getActivity( ) );				   
+				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
 				   IPRNTR iPrntr = iGedi.getPRNTR( );
 				   
-				   switch ( type )
+				   /*switch ( type )
 				   {
 					    case "AZTEC":
 							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.AZTEC, height, width, text );
@@ -216,7 +216,7 @@ public class gedi800 extends CordovaPlugin
 							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.QR_CODE, height, width, text );
 							break;
 						  
-				   }
+				   }*/
 				}
 			};
 			
