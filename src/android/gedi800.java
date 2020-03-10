@@ -115,20 +115,30 @@ public class gedi800 extends CordovaPlugin
 						sMsg = ("STATUS: " + "Valor padrão para erros não mapeados.");
 						break;
 				}
-				   
-				Paint paint = new Paint( );
 				
-				paint.setTextSize( 20 );
+				if ( printStatus == GEDI_PRNTR_e_Status.OK )
+				{ 
+					iPrntr.Init( );
+					
+					Paint paint = new Paint( );
+					
+					paint.setTextSize( 20 );
 
-				GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
-				
-				config.lineSpace = 10;
-				config.offset    = 10;
-				config.paint     = paint;
+					GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
+					
+					config.lineSpace = 10;
+					config.offset    = 10;
+					config.paint     = paint;
 
-				iPrntr.DrawStringExt( config, sMsg );
-				
-				callbackContext.success( sMsg );
+					iPrntr.DrawStringExt( config, sMsg );
+					
+					iPrntr.Output( );
+					
+					callbackContext.error( OK );
+				} else
+				{				
+					callbackContext.error( sMsg );
+				}
 			} catch ( Exception ex ) 
 			{
 				ex.printStackTrace( );
