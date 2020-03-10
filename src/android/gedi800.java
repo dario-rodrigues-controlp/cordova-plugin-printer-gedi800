@@ -160,10 +160,12 @@ public class gedi800 extends CordovaPlugin
 	{
 		JSONObject json = new JSONObject( args );
 		
-		String text   = json.getString( "text" );
-		String type   = json.getString( "type" );
-		int    height = Integer.parseInt( json.getString( "height" ) );
-		int    width  = Integer.parseInt( json.getString( "width"  ) ); 
+		String text = json.getString( "text" );
+		String type = json.getString( "type" );
+		
+		int     height = Integer.parseInt( json.getString( "height"     ) );
+		int     width  = Integer.parseInt( json.getString( "width"      ) ); 
+		int blankLines = Integer.parseInt( json.getString( "blankLines" ) );
 		
 		String OK = "ok";
 		
