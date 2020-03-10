@@ -126,7 +126,7 @@ public class gedi800 extends CordovaPlugin
 				config.offset    = 10;
 				config.paint     = paint;
 
-				iPrntr.DrawStringExt( config, 'Teste' );
+				iPrntr.DrawStringExt( config, sMsg );
 				
 				callbackContext.success( sMsg );
 			} catch ( Exception ex ) 
