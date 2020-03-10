@@ -90,10 +90,10 @@ public class gedi800 extends CordovaPlugin
 		{
 			try 
 			{
-				GEDI.init( cordova.getActivity( ).getApplicationContext( ) );				   
+				GEDI.init( cordova.getActivity( ) );				   
 				
-				iGEDI  = GEDI.getInstance( cordova.getActivity( ).getApplicationContext( ) );				   
-				iPrntr = iGedi.getPRNTR( );
+				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
+				iPrntr = iGEDI.getPRNTR( );
 				   
 				Paint paint = new Paint( );
 				
