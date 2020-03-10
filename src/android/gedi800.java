@@ -49,8 +49,8 @@ import br.com.gertec.gedi.structs.GEDI_PRNTR_st_StringConfig;
  */
 public class gedi800 extends CordovaPlugin 
 {
-	IGEDI iGedi = null;	
-	IPRNTR iprntr = null;
+	private IPRNTR iPrntr;
+    private IGEDI iGEDI;
 	
 	public boolean execute( String action, JSONArray args, CallbackContext callbackContext ) throws JSONException 
 	{
@@ -88,7 +88,7 @@ public class gedi800 extends CordovaPlugin
 		
         if ( text != null && text.length( ) > 0 ) 
 		{
-			Thread t = new Thread( ) 
+			/*Thread t = new Thread( ) 
 			{
 				@Override
 				public void run( ) 
@@ -117,7 +117,32 @@ public class gedi800 extends CordovaPlugin
 			{
 				ex.printStackTrace( );
 				callbackContext.error( ex.getMessage( ) );
-			}		
+			}*/
+
+			try 
+			{
+				GEDI.init( cordova.getActivity( ) );				   
+				
+				iGedi  = GEDI.getInstance( cordova.getActivity( ) );				   
+				iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
+				   
+				Paint paint = new Paint( );
+				
+				paint.setTextSize( 20 );
+
+				GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
+				
+				config.lineSpace = 10;
+				config.offset    = 10;
+				config.paint     = paint;
+
+				iPrntr.DrawStringExt( config, text );
+				callbackContext.success( OK );
+			} catch ( Exception ex ) 
+			{
+				ex.printStackTrace( );
+				callbackContext.error( ex.getMessage( ) );
+			}			
         } else 
 		{
             callbackContext.error( "Texto invalido para impressao." );
