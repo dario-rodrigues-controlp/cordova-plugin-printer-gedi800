@@ -98,9 +98,10 @@ public class gedi800 extends CordovaPlugin
 				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
 				iPrntr = iGEDI.getPRNTR( );
 				
-				printStatus = iPrntr.Status();
+				printStatus = iPrntr.Status( );
 
-				switch (printStatus) {
+				switch ( printStatus ) 
+				{
 					case OK:
 						sMsg = ("STATUS: " + "A impressora está pronta para uso.");
 						break;
@@ -117,15 +118,15 @@ public class gedi800 extends CordovaPlugin
 				   
 				Paint paint = new Paint( );
 				
-				paint.setTextSize( size );
+				paint.setTextSize( 20 );
 
 				GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
 				
-				config.lineSpace = blankLines;
+				config.lineSpace = 10;
 				config.offset    = 10;
 				config.paint     = paint;
 
-				iPrntr.DrawStringExt( config, text );
+				iPrntr.DrawStringExt( config, 'Teste' );
 				
 				callbackContext.success( sMsg );
 			} catch ( Exception ex ) 
