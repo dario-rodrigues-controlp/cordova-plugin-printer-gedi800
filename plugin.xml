@@ -12,11 +12,11 @@
 		
 	  <config-file parent="/*" target="res/xml/config.xml">
 	    <feature name="gedi800">
-		  <param name="android-package" value="cordova-plugin-printer-gedi800.gedi800" />
+		  <param name="android-package" value="cordova.plugin.printer.gedi800.gedi800" />
 		</feature>
 	  </config-file>
 	  
 	  <config-file parent="/*" target="AndroidManifest.xml"></config-file>
-	  <source-file src="src/android/gedi800.java" target-dir="src/cordova/plugin/printer/gedi/gedi800" />
+	  <source-file src="src/android/gedi800.java" target-dir="src/cordova/plugin/printer/gedi800/gedi800" />
 	</platform>
   </plugin>
