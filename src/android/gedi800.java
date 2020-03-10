@@ -51,6 +51,7 @@ public class gedi800 extends CordovaPlugin
 {
 	private IPRNTR iPrntr;
     private IGEDI iGEDI;
+	private GEDI_PRNTR_e_Status printStatus;
 	
 	public boolean execute( String action, JSONArray args, CallbackContext callbackContext ) throws JSONException 
 	{
@@ -78,6 +79,7 @@ public class gedi800 extends CordovaPlugin
 		String font     = json.getString( "font"     );
 		
 		int blankLines = Integer.parseInt( json.getString( "blankLines" ) );
+		int lineSpace  = Integer.parseInt( json.getString( "lineSpace"  ) );
 		int size       = Integer.parseInt( json.getString( "size"       ) );
 		
 		boolean bold      = Boolean.parseBoolean( json.getString( "bold"      ) ); 
@@ -90,24 +92,59 @@ public class gedi800 extends CordovaPlugin
 		{
 			try 
 			{
+			    String sMsg = "";
+			
 				GEDI.init( cordova.getActivity( ) );				   
 				
 				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
-				iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
-				   
-				Paint paint = new Paint( );
+				iPrntr = iGEDI.getPRNTR( );
 				
-				paint.setTextSize( size );
+				printStatus = iPrntr.Status( );
 
-				GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
+				switch ( printStatus ) 
+				{
+					case OK:
+						sMsg = ("STATUS: " + "A impressora está pronta para uso.");
+						break;
+					case OUT_OF_PAPER:
+						sMsg = ("STATUS: " + "A impressora está sem papel ou com tampa aberta.");
+						break;
+					case OVERHEAT:
+						sMsg = ("STATUS: " + "A impressora está superaquecida.");
+						break;
+					case UNKNOWN_ERROR:
+						sMsg = ("STATUS: " + "Valor padrão para erros não mapeados.");
+						break;
+				}
 				
-				config.lineSpace = blankLines;
-				config.offset    = 10;
-				config.paint     = paint;
+				if ( printStatus == GEDI_PRNTR_e_Status.OK )
+				{ 
+					iPrntr.Init( );
+					
+					Paint paint = new Paint( );
+					
+					paint.setTextSize( size );
 
-				iPrntr.DrawStringExt( config, text );
-				
-				callbackContext.success( OK );
+					GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
+					
+					config.lineSpace = lineSpace;
+					config.offset    = 10;
+					config.paint     = paint;
+
+					iPrntr.DrawStringExt( config, text );
+					
+					if ( blankLines > 0 )
+					{
+						iPrntr.DrawBlankLine( blankLines );
+					}
+					
+					iPrntr.Output( );
+					
+					callbackContext.success( OK );
+				} else
+				{				
+					callbackContext.error( sMsg );
+				}
 			} catch ( Exception ex ) 
 			{
 				ex.printStackTrace( );
@@ -123,107 +160,143 @@ public class gedi800 extends CordovaPlugin
 	{
 		JSONObject json = new JSONObject( args );
 		
-		String text   = json.getString( "text" );
-		String type   = json.getString( "type" );
-		int    height = Integer.parseInt( json.getString( "height" ) );
-		int    width  = Integer.parseInt( json.getString( "width"  ) ); 
+		String text = json.getString( "text" );
+		String type = json.getString( "type" );
+		
+		int     height = Integer.parseInt( json.getString( "height"     ) );
+		int     width  = Integer.parseInt( json.getString( "width"      ) ); 
+		int blankLines = Integer.parseInt( json.getString( "blankLines" ) );
 		
 		String OK = "ok";
 		
         if ( text != null && text.length( ) > 0 ) 
 		{
-			Thread t = new Thread( ) 
+			try 
 			{
-				@Override
-				public void run( ) 
+				String sMsg = "";
+				
+				GEDI.init( cordova.getActivity( ) );				   
+				
+				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
+				iPrntr = iGEDI.getPRNTR( );
+				
+				printStatus = iPrntr.Status( );
+
+				switch ( printStatus ) 
 				{
-				   /*GEDI.init( cordova.getActivity( ) );				   
-				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
-				   IPRNTR iPrntr = iGedi.getPRNTR( );
-				   
-				   switch ( type )
-				   {
-					    case "AZTEC":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.AZTEC, height, width, text );
+					case OK:
+						sMsg = ("STATUS: " + "A impressora está pronta para uso.");
+						break;
+					case OUT_OF_PAPER:
+						sMsg = ("STATUS: " + "A impressora está sem papel ou com tampa aberta.");
+						break;
+					case OVERHEAT:
+						sMsg = ("STATUS: " + "A impressora está superaquecida.");
+						break;
+					case UNKNOWN_ERROR:
+						sMsg = ("STATUS: " + "Valor padrão para erros não mapeados.");
+						break;
+				}
+				
+				if ( printStatus == GEDI_PRNTR_e_Status.OK )
+				{ 
+					iPrntr.Init( );
+					
+					GEDI_PRNTR_st_BarCodeConfig config = new GEDI_PRNTR_st_BarCodeConfig( );
+					
+					switch ( type )
+					{
+						case "AZTEC":
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.AZTEC;
 							break;
 						  
 						case "CODABAR":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODABAR, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODABAR;
 							break;
 						  
 						case "CODE_128":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODE_128, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODE_128;
 							break;
 						  
 						case "CODE_39":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODE_39, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODE_39;
 							break;
 						  
 						case "CODE_93":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODE_93, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODE_93;
 							break;
 						  
 						case "DATA_MATRIX":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.DATA_MATRIX, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.DATA_MATRIX;
 							break;
 						  
 						case "EAN_13":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.EAN_13, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.EAN_13;
 							break;
 						  
 						case "EAN_8":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.EAN_8, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.EAN_8;
 							break;
 						  
 						case "ITF":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.ITF, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.ITF;
 							break;
 						  
 						case "MAXICODE":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.MAXICODE, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.MAXICODE;
 							break;
 						  
 						case "PDF_417":						
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.PDF_417, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.PDF_417;
 							break;
 						  
 						case "RSS_14":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.RSS_14, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.RSS_14;
 							break;
 						  
 						case "RSS_EXPANDED":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.RSS_EXPANDED, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.RSS_EXPANDED;
 							break;
 						  
 						case "UPC_A":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.UPC_A, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.UPC_A;
 							break;
 						  
 						case "UPC_E":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.UPC_E, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.UPC_E;
 							break;
 						  
 						case "UPC_EAN_EXTENSION":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.UPC_EAN_EXTENSION, height, width, text );
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.UPC_EAN_EXTENSION;
 							break;
 						  
 						default:
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.QR_CODE, height, width, text );
-							break;
-						  
-				   }*/
-				}
-			};
-			
-			try 
-			{
-				t.start( );
-				callbackContext.success( OK );
-			} catch ( Exception ex )
+							config.barCodeType = GEDI_PRNTR_e_BarCodeType.QR_CODE;
+							break;					 
+					}
+					
+					config.height = height;
+					config.width  = width;
+
+					iPrntr.DrawBarCode( config, text );
+					
+					if ( blankLines > 0 )
+					{
+						iPrntr.DrawBlankLine( blankLines );
+					}
+					
+					iPrntr.Output( );
+					
+					callbackContext.success( OK );
+				} else
+				{				
+					callbackContext.error( sMsg );
+				}		
+			} catch ( Exception ex ) 
 			{
 				ex.printStackTrace( );
 				callbackContext.error( ex.getMessage( ) );
-			}		
+			}
         } else 
 		{
             callbackContext.error( "Texto invalido para impressao." );
