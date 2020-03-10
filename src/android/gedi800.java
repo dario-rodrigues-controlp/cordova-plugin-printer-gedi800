@@ -90,18 +90,18 @@ public class gedi800 extends CordovaPlugin
 		{
 			try 
 			{
-				GEDI.init( cordova.getActivity( ) );				   
+				GEDI.init( cordova.getActivity( ).getApplicationContext( ) );				   
 				
-				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
-				iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
+				iGEDI  = GEDI.getInstance( cordova.getActivity( ).getApplicationContext( ) );				   
+				iPrntr = iGedi.getPRNTR( );
 				   
 				Paint paint = new Paint( );
 				
-				paint.setTextSize( 20 );
+				paint.setTextSize( size );
 
 				GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
 				
-				config.lineSpace = 10;
+				config.lineSpace = blankLines;
 				config.offset    = 10;
 				config.paint     = paint;
 
