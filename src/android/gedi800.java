@@ -121,7 +121,7 @@ public class gedi800 extends CordovaPlugin
 
 			try 
 			{
-				GEDI.init( cordova.getActivity( ) );				   
+				/*GEDI.init( cordova.getActivity( ) );				   
 				
 				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
 				iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
@@ -136,7 +136,7 @@ public class gedi800 extends CordovaPlugin
 				config.offset    = 10;
 				config.paint     = paint;
 
-				iPrntr.DrawStringExt( config, text );
+				iPrntr.DrawStringExt( config, text );*/
 				callbackContext.success( OK );
 			} catch ( Exception ex ) 
 			{
