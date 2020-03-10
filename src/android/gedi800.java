@@ -51,6 +51,7 @@ public class gedi800 extends CordovaPlugin
 {
 	private IPRNTR iPrntr;
     private IGEDI iGEDI;
+	private GEDI_PRNTR_e_Status printStatus;
 	
 	public boolean execute( String action, JSONArray args, CallbackContext callbackContext ) throws JSONException 
 	{
@@ -90,10 +91,29 @@ public class gedi800 extends CordovaPlugin
 		{
 			try 
 			{
+			    String sMsg = "";
+			
 				GEDI.init( cordova.getActivity( ) );				   
 				
 				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
 				iPrntr = iGEDI.getPRNTR( );
+				
+				printStatus = iPrntr.Status();
+
+				switch (printStatus) {
+					case OK:
+						sMsg = ("STATUS: " + "A impressora está pronta para uso.");
+						break;
+					case OUT_OF_PAPER:
+						sMsg = ("STATUS: " + "A impressora está sem papel ou com tampa aberta.");
+						break;
+					case OVERHEAT:
+						sMsg = ("STATUS: " + "A impressora está superaquecida.");
+						break;
+					case UNKNOWN_ERROR:
+						sMsg = ("STATUS: " + "Valor padrão para erros não mapeados.");
+						break;
+				}
 				   
 				Paint paint = new Paint( );
 				
@@ -107,7 +127,7 @@ public class gedi800 extends CordovaPlugin
 
 				iPrntr.DrawStringExt( config, text );
 				
-				callbackContext.success( OK );
+				callbackContext.success( sMsg );
 			} catch ( Exception ex ) 
 			{
 				ex.printStackTrace( );
