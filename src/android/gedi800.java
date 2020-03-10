@@ -50,7 +50,7 @@ import br.com.gertec.gedi.structs.GEDI_PRNTR_st_StringConfig;
 public class gedi800 extends CordovaPlugin 
 {
 	IGEDI iGedi = null;	
-	IPRNTR iprntr;
+	IPRNTR iprntr = null;
 	
 	public boolean execute( String action, JSONArray args, CallbackContext callbackContext ) throws JSONException 
 	{
