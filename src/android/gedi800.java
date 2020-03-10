@@ -79,6 +79,7 @@ public class gedi800 extends CordovaPlugin
 		String font     = json.getString( "font"     );
 		
 		int blankLines = Integer.parseInt( json.getString( "blankLines" ) );
+		int lineSpace  = Integer.parseInt( json.getString( "lineSpace"  ) );
 		int size       = Integer.parseInt( json.getString( "size"       ) );
 		
 		boolean bold      = Boolean.parseBoolean( json.getString( "bold"      ) ); 
@@ -122,19 +123,24 @@ public class gedi800 extends CordovaPlugin
 					
 					Paint paint = new Paint( );
 					
-					paint.setTextSize( 20 );
+					paint.setTextSize( size );
 
 					GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig( );
 					
-					config.lineSpace = 10;
+					config.lineSpace = lineSpace;
 					config.offset    = 10;
 					config.paint     = paint;
 
-					iPrntr.DrawStringExt( config, sMsg );
+					iPrntr.DrawStringExt( config, text );
+					
+					if ( blankLines > 0 )
+					{
+						iPrntr.DrawBlankLine( blankLines );
+					}
 					
 					iPrntr.Output( );
 					
-					callbackContext.error( OK );
+					callbackContext.success( OK );
 				} else
 				{				
 					callbackContext.error( sMsg );
@@ -163,97 +169,124 @@ public class gedi800 extends CordovaPlugin
 		
         if ( text != null && text.length( ) > 0 ) 
 		{
-			Thread t = new Thread( ) 
-			{
-				@Override
-				public void run( ) 
-				{
-				   /*GEDI.init( cordova.getActivity( ) );				   
-				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
-				   IPRNTR iPrntr = iGedi.getPRNTR( );
-				   
-				   switch ( type )
-				   {
-					    case "AZTEC":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.AZTEC, height, width, text );
-							break;
-						  
-						case "CODABAR":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODABAR, height, width, text );
-							break;
-						  
-						case "CODE_128":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODE_128, height, width, text );
-							break;
-						  
-						case "CODE_39":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODE_39, height, width, text );
-							break;
-						  
-						case "CODE_93":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.CODE_93, height, width, text );
-							break;
-						  
-						case "DATA_MATRIX":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.DATA_MATRIX, height, width, text );
-							break;
-						  
-						case "EAN_13":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.EAN_13, height, width, text );
-							break;
-						  
-						case "EAN_8":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.EAN_8, height, width, text );
-							break;
-						  
-						case "ITF":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.ITF, height, width, text );
-							break;
-						  
-						case "MAXICODE":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.MAXICODE, height, width, text );
-							break;
-						  
-						case "PDF_417":						
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.PDF_417, height, width, text );
-							break;
-						  
-						case "RSS_14":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.RSS_14, height, width, text );
-							break;
-						  
-						case "RSS_EXPANDED":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.RSS_EXPANDED, height, width, text );
-							break;
-						  
-						case "UPC_A":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.UPC_A, height, width, text );
-							break;
-						  
-						case "UPC_E":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.UPC_E, height, width, text );
-							break;
-						  
-						case "UPC_EAN_EXTENSION":
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.UPC_EAN_EXTENSION, height, width, text );
-							break;
-						  
-						default:
-							tPRNTR.DrawBarCode( iPrntr, GEDI_PRNTR_e_BarCodeType.QR_CODE, height, width, text );
-							break;
-						  
-				   }*/
-				}
-			};
+			String sMsg = "";
 			
-			try 
+			GEDI.init( cordova.getActivity( ) );				   
+			
+			iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
+			iPrntr = iGEDI.getPRNTR( );
+			
+			printStatus = iPrntr.Status( );
+
+			switch ( printStatus ) 
 			{
-				t.start( );
+				case OK:
+					sMsg = ("STATUS: " + "A impressora está pronta para uso.");
+					break;
+				case OUT_OF_PAPER:
+					sMsg = ("STATUS: " + "A impressora está sem papel ou com tampa aberta.");
+					break;
+				case OVERHEAT:
+					sMsg = ("STATUS: " + "A impressora está superaquecida.");
+					break;
+				case UNKNOWN_ERROR:
+					sMsg = ("STATUS: " + "Valor padrão para erros não mapeados.");
+					break;
+			}
+			
+			if ( printStatus == GEDI_PRNTR_e_Status.OK )
+			{ 
+				iPrntr.Init( );
+				
+				GEDI_PRNTR_st_BarCodeConfig config = new GEDI_PRNTR_st_BarCodeConfig( );
+				
+				switch ( type )
+			    {
+					case "AZTEC":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.AZTEC;
+						break;
+					  
+					case "CODABAR":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODABAR;
+						break;
+					  
+					case "CODE_128":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODE_128;
+						break;
+					  
+					case "CODE_39":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODE_39;
+						break;
+					  
+					case "CODE_93":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.CODE_93;
+						break;
+					  
+					case "DATA_MATRIX":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.DATA_MATRIX;
+						break;
+					  
+					case "EAN_13":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.EAN_13;
+						break;
+					  
+					case "EAN_8":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.EAN_8;
+						break;
+					  
+					case "ITF":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.ITF;
+						break;
+					  
+					case "MAXICODE":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.MAXICODE;
+						break;
+					  
+					case "PDF_417":						
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.PDF_417;
+						break;
+					  
+					case "RSS_14":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.RSS_14;
+						break;
+					  
+					case "RSS_EXPANDED":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.RSS_EXPANDED;
+						break;
+					  
+					case "UPC_A":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.UPC_A;
+						break;
+					  
+					case "UPC_E":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.UPC_E;
+						break;
+					  
+					case "UPC_EAN_EXTENSION":
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.UPC_EAN_EXTENSION;
+						break;
+					  
+					default:
+						config.barCodeType = GEDI_PRNTR_e_BarCodeType.QR_CODE;
+						break;					 
+			    }
+				
+				config.height = height;
+				config.width  = width;
+
+				iPrntr.DrawBarCode( config, text );
+				
+				if ( blankLines > 0 )
+				{
+					iPrntr.DrawBlankLine( blankLines );
+				}
+				
+				iPrntr.Output( );
+				
 				callbackContext.success( OK );
-			} catch ( Exception ex )
-			{
-				ex.printStackTrace( );
-				callbackContext.error( ex.getMessage( ) );
+			} else
+			{				
+				callbackContext.error( sMsg );
 			}		
         } else 
 		{
