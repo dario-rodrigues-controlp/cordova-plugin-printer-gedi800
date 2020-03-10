@@ -88,40 +88,9 @@ public class gedi800 extends CordovaPlugin
 		
         if ( text != null && text.length( ) > 0 ) 
 		{
-			/*Thread t = new Thread( ) 
-			{
-				@Override
-				public void run( ) 
-				{
-				   GEDI.init( cordova.getActivity( ) );				   
-				   iGedi = GEDI.getInstance( cordova.getActivity( ) );				   
-				   iprntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
-				   //tPRNTR.DrawString( cordova.getActivity( ).getApplicationContext( ), iPrntr, position, 0, blankLines, font, bold, italic, underline, size, text );
-				   Paint paint = new Paint();
-				   paint.setTextSize(size);
-
-				   GEDI_PRNTR_st_StringConfig config = new GEDI_PRNTR_st_StringConfig();
-				   config.lineSpace = blankLines;
-				   config.offset = 10;
-				   config.paint = paint;
-
-				   iprntr.DrawStringExt(config, text);
-				}
-			};
-			
 			try 
 			{
-				t.start( );
-				callbackContext.success( OK );
-			} catch ( Exception ex )
-			{
-				ex.printStackTrace( );
-				callbackContext.error( ex.getMessage( ) );
-			}*/
-
-			try 
-			{
-				/*GEDI.init( cordova.getActivity( ) );				   
+				GEDI.init( cordova.getActivity( ) );				   
 				
 				iGEDI  = GEDI.getInstance( cordova.getActivity( ) );				   
 				iPrntr = GEDI.getInstance( cordova.getActivity( ) ).getPRNTR( );
@@ -136,7 +105,8 @@ public class gedi800 extends CordovaPlugin
 				config.offset    = 10;
 				config.paint     = paint;
 
-				iPrntr.DrawStringExt( config, text );*/
+				iPrntr.DrawStringExt( config, text );
+				
 				callbackContext.success( OK );
 			} catch ( Exception ex ) 
 			{
