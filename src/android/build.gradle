@@ -13,7 +13,7 @@ dependencies {
 
 android {
     configurations.all {
-        resolutionStrategy.force 'com.google.zxing.BarcodeFormat'
+        resolutionStrategy.force 'com.google.zxing'
     }
 }
 
