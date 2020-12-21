@@ -11,6 +11,22 @@ dependencies {
     compile("com.android.support.constraint:constraint-layout:1.1.3") { exclude group: 'com.google.zxing' }
 }
 
+configurations.all {
+
+        resolutionStrategy {
+
+            eachDependency { DependencyResolveDetails details ->
+                def group = details.requested.group
+                def name = details.requested.name
+                def fullName =  group + ":" + name
+                print fullName
+                if (dependencyMap.containsKey(fullName)) {
+                    details.useVersion dependencyMap[fullName]
+                }
+            }
+        }
+    }
+
 android {
     packagingOptions {
         exclude 'META-INF/NOTICE'
