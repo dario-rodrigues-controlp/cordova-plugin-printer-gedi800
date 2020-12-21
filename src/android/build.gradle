@@ -13,7 +13,7 @@ dependencies {
 
 android {
     configurations.all {
-        resolutionStrategy.force 'com.google.zxing'
+        exclude group: 'com.google.zxing'
     }
 }
 
